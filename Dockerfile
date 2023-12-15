@@ -1,4 +1,5 @@
 FROM osrf/ros:humble-desktop
+# SHELL ["/bin/bash", "-c"]
 
 # General Utilities
 RUN apt update
@@ -33,19 +34,24 @@ RUN apt install -y ros-humble-ur
 
 #ENV CYCLONEDDS_URI="<CycloneDDS><Domain id='any'><General><ExternalNetworkAddress>${HOST_ADDR}</ExternalNetworkAddress><AllowMulticast>false</AllowMulticast></General><Discovery><ParticipantIndex>1</ParticipantIndex><Peers><Peer address='${HOST_ADDR}'/></Peers></Discovery><Tracing><Verbosity>config</Verbosity><Out>stderr</Out></Tracing></Domain></CycloneDDS>"
 
+RUN rosdep update
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 
-RUN echo ". /opt/ros/humble/setup.bash" >> ~/.bashrc
+# Set up 3rd party workspace
+ENV THIRD_PARTY_WS  /workspaces/3rd_party_ws
+RUN mkdir -p $THIRD_PARTY_WS/src
+RUN --mount=type=ssh git clone -b ros2 git@github.com:fzi-forschungszentrum-informatik/cartesian_controllers.git $THIRD_PARTY_WS/src
+WORKDIR $THIRD_PARTY_WS
+RUN rosdep install --from-paths src --ignore-src --rosdistro humble -y 
+RUN . /opt/ros/humble/setup.sh \
+    && colcon build --packages-skip cartesian_controller_simulation cartesian_controller_tests --cmake-args -DCMAKE_BUILD_TYPE=Release
+RUN echo "source $THIRD_PARTY_WS/install/setup.bash" >> ~/.bashrc
 
-# Set up workspaces
-RUN mkdir -p /workspaces/3rd_party_ws/src
-RUN cd /workspaces/3rd_party_ws/src
-RUN git clone -b ros2 git@github.com:fzi-forschungszentrum-informatik/cartesian_controllers.git
-RUN rosdep install --from-paths ./ --ignore-src -y
-RUN cd ..
-RUN colcon build --packages-skip cartesian_controller_simulation cartesian_controller_tests --cmake-args -DCMAKE_BUILD_TYPE=Release
-
-COPY src /workspaces/ros2_ws/src
-RUN cd /workspaces/ros2_ws/src
+# Set up main workspace
+ENV MAIN_WS  /workspaces/ros2_ws
+RUN mkdir -p $MAIN_WS/src
+COPY src $MAIN_WS/src
+WORKDIR $MAIN_WS
 
 # WSL
 ENV LD_LIBRARY_PATH=/usr/lib/wsl/lib
@@ -53,3 +59,5 @@ ENV LD_LIBRARY_PATH=/usr/lib/wsl/lib
 COPY entrypoint.sh /setup/entrypoint.sh
 
 ENTRYPOINT ["/setup/entrypoint.sh"]
+
+SHELL ["/bin/bash", "-c"]
