@@ -15,10 +15,10 @@ RUN apt install -y ros-humble-ros2-control && \
 RUN apt install -y ros-humble-moveit
 
 # Set up DDS with host
-ENV RMW_IMPLEMENTATION="rmw_cyclonedds_cpp"
-ENV HOST_ADDR="1.2.3.4"
+# ENV RMW_IMPLEMENTATION="rmw_cyclonedds_cpp"
+# ENV HOST_ADDR="1.2.3.4"
 
-ENV CYCLONEDDS_URI="<CycloneDDS><Domain id='any'><General><ExternalNetworkAddress>${HOST_ADDR}</ExternalNetworkAddress><AllowMulticast>false</AllowMulticast></General><Discovery><ParticipantIndex>1</ParticipantIndex><Peers><Peer address='${HOST_ADDR}'/></Peers></Discovery><Tracing><Verbosity>config</Verbosity><Out>stderr</Out></Tracing></Domain></CycloneDDS>"
+# ENV CYCLONEDDS_URI="<CycloneDDS><Domain id='any'><General><ExternalNetworkAddress>${HOST_ADDR}</ExternalNetworkAddress><AllowMulticast>false</AllowMulticast></General><Discovery><ParticipantIndex>1</ParticipantIndex><Peers><Peer address='${HOST_ADDR}'/></Peers></Discovery><Tracing><Verbosity>config</Verbosity><Out>stderr</Out></Tracing></Domain></CycloneDDS>"
 
 
 RUN echo ". /opt/ros/humble/setup.bash" >> ~/.bashrc
