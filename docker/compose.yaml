@@ -1,0 +1,10 @@
+services:
+  robot-dev:
+    build: 
+      context: docker
+      image: robot-dev
+      dockerfile: Dockerfile
+    volumes:
+      - "./src:$MAIN_WS//src"
+    environment:
+     - MAIN_WS="/workspaces/ros2_ws"
