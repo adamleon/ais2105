@@ -58,6 +58,6 @@ ENV LD_LIBRARY_PATH=/usr/lib/wsl/lib
 
 COPY entrypoint.sh /setup/entrypoint.sh
 
-ENTRYPOINT ["/setup/entrypoint.sh"]
+# ENTRYPOINT ["/setup/entrypoint.sh"]
 
 SHELL ["/bin/bash", "-c"]
