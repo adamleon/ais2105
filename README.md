@@ -8,7 +8,7 @@ Make sure that you have set up SSH on your computer:
 ssh-add -l
 ```
 If not, set up SSH, For instance using this:
-(https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)[https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent]
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
 Fork and clone this git repository and navigate to the folder with a terminal. (For instance in VSCode, open this folder as a working folder, and open a new terminal)
 
