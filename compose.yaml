@@ -1,0 +1,12 @@
+services:
+  robot-dev:
+    container_name: robot-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      ssh: 
+        - default
+    volumes:
+      - "./src:/workspaces/ros2_ws/src"
+    environment:
+      - MAIN_WS=/workspaces/ros2_ws
