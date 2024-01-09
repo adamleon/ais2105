@@ -16,3 +16,13 @@ Run the following code and pray:
 ```
 docker compose up
 ```
+
+# Running Docker
+Every time you want to use this project, run
+```
+docker compose up
+```
+
+If you're using VSCode, click the small green icon in the lower left corner. Click then "Attack to Running Container" and select the running container. A new window pops up, which will be your main development platform.
+
+The ´src´ folder on your computer is linked to the ´/workspaces/ros2_ws/src´ folder inside your docker container, so any files changed or added in either place will be synced.
