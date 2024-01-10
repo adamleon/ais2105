@@ -9,5 +9,14 @@ services:
         - default
     volumes:
       - "./src:/workspaces/ros2_ws/src"
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+      - "/mnt/wslg:/mnt/wslg"
+      - "/usr/lib/wsl:/usr/lib/wsl"
     environment:
       - MAIN_WS=/workspaces/ros2_ws
+      - DISPLAY=$DISPLAY
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+      - PULSE_SERVER=$PULSE_SERVER
+    devices:
+      - /dev/dxg:/dev/dxg
