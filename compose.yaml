@@ -1,6 +1,7 @@
 services:
   robot-dev:
     container_name: robot-dev
+    network_mode: "host"
     build:
       context: .
       dockerfile: Dockerfile
