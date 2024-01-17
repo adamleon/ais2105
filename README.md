@@ -12,10 +12,37 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generati
 
 Fork and clone this git repository and navigate to the folder with a terminal. (For instance in VSCode, open this folder as a working folder, and open a new terminal)
 
+## On Windows
+>> Before running the code, check that the `entrypoint.sh` file is has a line ending of LF (Line Feed) not CRLF (Carrige Return, Line Feed). To do this (in VSCode at least) open the file and look in the lower right corner. It says somthing about line and column position of the cursor, number of spaces, UTF-8, etc. There it says LF or CRLF. Click that and change to LF. Save the file
+
 Run the following code and pray:
 ```
 docker compose up
 ```
+
+## On Mac and Linux
+Go into the `compose.yaml` file and comment out 
+```
+ #     - "/tmp/.X11-unix:/tmp/.X11-unix"
+ #     - "/mnt/wslg:/mnt/wslg"
+ #     - "/usr/lib/wsl:/usr/lib/wsl"
+```
+and
+``` 
+ #   devices:
+ #     - /dev/dxg:/dev/dxg
+```
+In the terminal, navigate to the ais2105 folder and run the code
+```
+sudo chmod 777 entrypoint.sh
+```
+to make the `entrypoint.sh` file accessable to execute inside the docker container
+
+Run the following code and pray:
+```
+docker compose up
+```
+
 
 # Running Docker
 Every time you want to use this project, run
