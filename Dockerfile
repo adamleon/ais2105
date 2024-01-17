@@ -1,5 +1,4 @@
-FROM osrf/ros:humble-desktop
-# SHELL ["/bin/bash", "-c"]
+FROM osrf/ros:humble-desktop AS robot_dev_base
 
 # General Utilities
 RUN apt update
@@ -11,28 +10,17 @@ RUN apt install -y openssh-client git
 
 # download public key for github.com
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-#RUN --mount=type=ssh bundle install
 
-# OpenGL bug fix
-RUN apt install -y software-properties-common
-RUN add-apt-repository ppa:kisak/kisak-mesa
-RUN apt update
-RUN apt upgrade -y
-
-# ROS 2 installs
+# ROS2 Packages
 RUN apt install -y ros-humble-rviz2
 RUN apt install -y ros-humble-ros2-control && \
     apt install -y ros-humble-ros2-controllers && \
     apt install -y ros-humble-rqt-joint-trajectory-controller
 RUN apt install -y ros-humble-moveit
 RUN apt install -y ros-humble-ur
+RUN apt install -y gazebo
 
-# Set up DDS with host
-#ENV RMW_IMPLEMENTATION="rmw_cyclonedds_cpp"
-#ENV HOST_ADDR="1.2.3.4"
-
-#ENV CYCLONEDDS_URI="<CycloneDDS><Domain id='any'><General><ExternalNetworkAddress>${HOST_ADDR}</ExternalNetworkAddress><AllowMulticast>false</AllowMulticast></General><Discovery><ParticipantIndex>1</ParticipantIndex><Peers><Peer address='${HOST_ADDR}'/></Peers></Discovery><Tracing><Verbosity>config</Verbosity><Out>stderr</Out></Tracing></Domain></CycloneDDS>"
-
+# ROS2 Configurations
 RUN rosdep update
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
 
@@ -41,24 +29,48 @@ ENV THIRD_PARTY_WS  /workspaces/3rd_party_ws
 RUN mkdir -p $THIRD_PARTY_WS/src
 WORKDIR $THIRD_PARTY_WS
 RUN --mount=type=ssh git clone -b ros2 git@github.com:fzi-forschungszentrum-informatik/cartesian_controllers.git $THIRD_PARTY_WS/src/cartesian_controllers
-# RUN --mount=type=ssh git clone git@github.com:UniversalRobots/Universal_Robots_ROS2_Gazebo_Simulation.git $THIRD_PARTY_WS/src/Universal_Robots_ROS2_Gazebo_Simulation
-# RUN vcs import src --input src/Universal_Robots_ROS2_Gazebo_Simulation/Universal_Robots_ROS2_Gazebo_Simulation.humble.repos
+RUN --mount=type=ssh git clone -b humble git@github.com:UniversalRobots/Universal_Robots_ROS2_Gazebo_Simulation.git $THIRD_PARTY_WS/src/Universal_Robots_ROS2_Gazebo_Simulation
+RUN --mount=type=ssh git clone -b humble git@github.com:ros-controls/gazebo_ros2_control.git $THIRD_PARTY_WS/src/gazebo_ros2_control
+
 RUN rosdep install --from-paths src --ignore-src --rosdistro humble -y 
-RUN . /opt/ros/humble/setup.sh \
-    && colcon build --packages-skip cartesian_controller_simulation cartesian_controller_tests --cmake-args -DCMAKE_BUILD_TYPE=Release
+RUN . /opt/ros/humble/setup.sh && colcon build --packages-skip cartesian_controller_simulation cartesian_controller_tests --cmake-args -DCMAKE_BUILD_TYPE=Release
 RUN echo "source $THIRD_PARTY_WS/install/setup.bash" >> ~/.bashrc
 
 # Set up main workspace
 ENV MAIN_WS  /workspaces/ros2_ws
 RUN mkdir -p $MAIN_WS/src
-COPY src $MAIN_WS/src
 WORKDIR $MAIN_WS
+
+COPY entrypoint.sh /setup/entrypoint.sh
+ENTRYPOINT ["/setup/entrypoint.sh"]
+
+SHELL ["/bin/bash", "-c"]
+
+## Docker for WSL2 and NVidia drivers
+FROM robot_dev_base AS robot_dev_wsl_nvidia
+
+# Install CUDA
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
+RUN mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
+RUN wget https://developer.download.nvidia.com/compute/cuda/12.3.2/local_installers/cuda-repo-wsl-ubuntu-12-3-local_12.3.2-1_amd64.deb
+RUN dpkg -i cuda-repo-wsl-ubuntu-12-3-local_12.3.2-1_amd64.deb
+RUN cp /var/cuda-repo-wsl-ubuntu-12-3-local/cuda-*-keyring.gpg /usr/share/keyrings/
+RUN apt update
+RUN apt -y install cuda-toolkit-12-3
+
+RUN export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 
 # WSL
 ENV LD_LIBRARY_PATH=/usr/lib/wsl/lib
 
-COPY entrypoint.sh /setup/entrypoint.sh
+## Docker for WSL2
+FROM robot_dev_base AS robot_dev_wsl
 
-ENTRYPOINT ["/setup/entrypoint.sh"]
+# WSL
+ENV LD_LIBRARY_PATH=/usr/lib/wsl/lib
 
-SHELL ["/bin/bash", "-c"]
+## Docker for MacOS
+FROM robot_dev_base AS robot_dev_mac
+
+## Docker for Linux
+FROM robot_dev_base AS robot_dev_linux

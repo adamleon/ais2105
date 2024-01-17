@@ -1,39 +1,51 @@
 services:
-  windows:
+  robot-base:
     container_name: robot-dev
     network_mode: "host"
     build:
       context: .
-      dockerfile: Dockerfile
       ssh: 
         - default
     volumes:
-      - "./src:/workspaces/ros2_ws/src"
+      - "../src:/workspaces/ros2_ws/src"
+    environment:
+      - MAIN_WS=/workspaces/ros2_ws
+  windows-wsl-nvidia:
+    extends: robot-base
+    build:
+      target: robot_dev_wsl_nvidia
+    volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix"
       - "/mnt/wslg:/mnt/wslg"
       - "/usr/lib/wsl:/usr/lib/wsl"
-    devices:
-      - /dev/dxg:/dev/dxg
-  mac:
-    container_name: robot-dev
-    network_mode: "host"
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+  windows-wsl:
+    extends: robot-base
     build:
-      context: .
-      dockerfile: Dockerfile
-      ssh: 
-        - default
+      target: robot_dev_wsl
     volumes:
-      - "./src:/workspaces/ros2_ws/src"
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+      - "/mnt/wslg:/mnt/wslg"
+      - "/usr/lib/wsl:/usr/lib/wsl"
+  mac:
+    extends: robot-base
+    build:
+      target: robot_dev_mac
+    environment:
+      - DISPLAY=${HOSTNAME}:0
+    volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix"
   linux:
-    container_name: robot-dev
-    network_mode: "host"
+    extends: robot-base
     build:
-      context: .
-      dockerfile: Dockerfile
-      ssh: 
-        - default
+      target: robot_dev_mac
+    environment:
+      - DISPLAY=${HOSTNAME}:0
     volumes:
-      - "./src:/workspaces/ros2_ws/src"
-environment:
-  - MAIN_WS=/workspaces/ros2_ws
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
