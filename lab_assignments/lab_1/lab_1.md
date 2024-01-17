@@ -100,6 +100,6 @@ ros2 launch ur_robot_driver test_joint_trajectory_controller.launch.py
 ### Creating a subscriber
 Next we will add a subscriber to your node. Look at the subscriber tutorial for inspiration and make the following:
 
-1. Initialize a subscriber that takes in a trajectory_msgs/msg/JointTrajectoryMsg. Remember to use import (Python) or include (C++), and to update the `packages.xml` (and CMakeLists.txt in C++).
-2. Change the `listener_callback` so that it takes in a JointTrajectoryMsg and reads `points.position[i]` where `i` refers to a specific joint (0 is "shoulder_pan_joint", 1 is "shoulder_lift_joint", etc.). Read each of the values and publish them on the correct publishing topic
+1. Initialize a subscriber that takes in a sensor_msgs/msg/JointStateMsg. Remember to use import (Python) or include (C++), and to update the `packages.xml` (and CMakeLists.txt in C++). The topic to subscribe to is `/joint_states`
+2. Change the `listener_callback` so that it takes in a JointStateMsg and reads `position[i]` where `i` refers to a specific joint (0 is "shoulder_pan_joint", 1 is "shoulder_lift_joint", etc.). Read each of the values and publish them on the correct publishing topic
 3. Build the node and run the simulator and plotter to see what happens.

@@ -17,37 +17,42 @@ Fork and clone this git repository and navigate to the folder with a terminal. (
 
 Run the following code and pray:
 ```
-docker compose up
+docker compose up windows-wsl
+```
+If you have Nvidia instead run
+```
+docker compose up windows-wsl-nvidia
 ```
 
-## On Mac and Linux
-Go into the `compose.yaml` file and comment out 
+## On Mac 
+Run the following code:
 ```
- #     - "/tmp/.X11-unix:/tmp/.X11-unix"
- #     - "/mnt/wslg:/mnt/wslg"
- #     - "/usr/lib/wsl:/usr/lib/wsl"
+brew install xquartz
 ```
-and
-``` 
- #   devices:
- #     - /dev/dxg:/dev/dxg
+and restart your PC
+After that run
 ```
-In the terminal, navigate to the ais2105 folder and run the code
+xhost +
 ```
-sudo chmod 777 entrypoint.sh
-```
-to make the `entrypoint.sh` file accessable to execute inside the docker container
+Open XQuartz (which should be running), go into Settings/Preferences->Security->allow connections from network clients
 
 Run the following code and pray:
 ```
-docker compose up
+docker compose up mac
+```
+There is a problem that OpenGL does not work because docker cannot find a graphics driver. If you find a solution, contact me.
+
+# On Linux
+This has not been tested, but run the following code and pray:
+```
+docker compose up linux
 ```
 
 
 # Running Docker
 Every time you want to use this project, run
 ```
-docker compose up
+docker compose up windows-wsl/windows-wsl-nvidia/mac/linux
 ```
 
 If you're using VSCode, click the small green icon in the lower left corner. Click then "Attack to Running Container" and select the running container. A new window pops up, which will be your main development platform.
