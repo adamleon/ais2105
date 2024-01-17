@@ -38,14 +38,14 @@ services:
     build:
       target: robot_dev_mac
     environment:
-      - DISPLAY=${HOSTNAME}:0
+      - DISPLAY=host.docker.internal:0
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix"
   linux:
     extends: robot-base
     build:
-      target: robot_dev_mac
+      target: robot_dev_linux
     environment:
-      - DISPLAY=${HOSTNAME}:0
+      - DISPLAY=host.docker.internal:0
     volumes:
       - "/tmp/.X11-unix:/tmp/.X11-unix"
