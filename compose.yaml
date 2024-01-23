@@ -7,7 +7,7 @@ services:
       ssh: 
         - default
     volumes:
-      - "../src:/workspaces/ros2_ws/src"
+      - "./src:/workspaces/ros2_ws/src"
     environment:
       - MAIN_WS=/workspaces/ros2_ws
   windows-wsl-nvidia:
