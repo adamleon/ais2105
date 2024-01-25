@@ -39,12 +39,36 @@ Every robot in ROS2 is described using URDF (Universal Robot Description Format)
 ### Task 3a
 Go through the tutorial given in [https://docs.ros.org/en/humble/Tutorials/Intermediate/URDF/URDF-Main.html] to create a simple table. You do not have to follow all the tutorials to achieve this.
 
-The table should consist of two links: One the size of the robot table in the lab and one the size of the adapter plate the robot is mounted on
+Make a new package in ``ros2_ws/src`, which is called `lab_urdf` using the command
+```
+ros2 pkg create lab_urdf
+```
 
-Create joints so that these two are places correctly relative to each other so that they are the same as the tables in the lab. Remember to create a joint between the `table` link and the `world` link
+Inside you create a new folder called `urdf` and a file called `table.urdf`
+
+Go into the CMakeLists.txt file and paste in this code
+```
+install(DIRECTORY
+  urdf
+  DESTINATION share/${PROJECT_NAME}/
+)
+```
+after `# find_package(<dependency> REQUIRED)`. This will copy the urdf folder into the correct position when you run `colcon build`
+
+After that, edit the `table.urdf` file to create a table.
+
+The table should consist of two links: One the size of the robot table in the lab and one the size of the adapter plate the robot is mounted on.
+
+Create joints so that these two are places correctly relative to each other so that they are the same as the tables in the lab. Remember to create a joint between the `table` link and the `world` link.
+
+To see the urdf model, run
+```
+ros2 launch urdf_tutorial display.launch.py model:=`ros2 pkg prefix --share lab_urdf`/urdf/test.urdf
+```
+Remember to build the package and `source install/setup.bash` if there are any issues.
 
 ### Task 3b
-Lastly, use the xacro commands to add a robot to the adapter plate (you can choose which model you want). Some commands that are useful are:
+Lastly, use the xacro commands to add a robot to the adapter plate (you can choose which model you want). You might need to make multiple files for this. Some commands that are useful are:
 ```
   <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
 ```
