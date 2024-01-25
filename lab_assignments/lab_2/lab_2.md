@@ -4,7 +4,7 @@ The purpose of this lab assignment is to learn how to set up a robot workspace a
 ## Task 1: Transform Matrices
 In the image below you there are four reference frames. {A} is the workspace frame, {B} is the gripper (or end-effector) frame, {C} is the camera frame and {D} is the workpiece frame. 
 
-![Workarea](workarea.png)
+![Workarea](/lab_assignments/lab_2/workarea.png)
 
 ### Task 1a
 Using the dimensions  given in the figure, find the transform matrix $\mathbf{T}_\text{ad}$, $\mathbf{T}_\text{ac}$  and $\mathbf{T}_\text{cd}$
