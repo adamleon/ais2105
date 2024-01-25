@@ -1,12 +1,7 @@
 services:
   robot-base:
     container_name: robot-dev
-  #  network_mode: "host"
-    ports:
-      - "192.168.1.101:50001:50001"
-      - "192.168.1.101:50002:50002"
-      - "192.168.1.101:50003:50003"
-      - "192.168.1.101:50004:50004"
+    network_mode: "host"
     build:
       context: .
       ssh: 
