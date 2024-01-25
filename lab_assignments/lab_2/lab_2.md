@@ -7,10 +7,10 @@ In the image below you there are four reference frames. {A} is the workspace fra
 ![Workarea](workarea.png)
 
 ### Task 1a
-Using the dimensions  given in the figure, find the transform matrix $`\mathbf{T}_\text{c}^\text{d}`$
+Using the dimensions  given in the figure, find the transform matrix $`\mathbf{T}_\text{ad}`$, $`\mathbf{T}_\text{ac}`$ and $`\mathbf{T}_\text{cd}`$
 
 ### Task 1b
-Find the inverse $\mathbf{T}_\text{ca}$, and show that $\mathbf{T}_\text{ca}\mathbf{T}_\text{ad}=\mathbf{T}_\text{cd}$.
+Find the inverse $`\mathbf{T}_\text{ca}`$, and show that $`\mathbf{T}_\text{ca}\mathbf{T}_\text{ad}=\mathbf{T}_\text{cd}`$.
 
 ### Task 1c
 Given the matrix
