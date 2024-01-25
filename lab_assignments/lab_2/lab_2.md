@@ -10,11 +10,11 @@ In the image below you there are four reference frames. {A} is the workspace fra
 Using the dimensions  given in the figure, find the transform matrix $`\mathbf{T}_\text{ad}`$, $`\mathbf{T}_\text{ac}`$ and $`\mathbf{T}_\text{cd}`$
 
 ### Task 1b
-Find the inverse $`\mathbf{T}_\text{ca}`$, and show that $`\mathbf{T}_\text{ca}\mathbf{T}_\text{ad}=\mathbf{T}_\text{cd}`$.
+Find the inverse $`\mathbf{T}_\text{ca}`$ and show that $`\mathbf{T}_\text{ca}\mathbf{T}_\text{ad}=\mathbf{T}_\text{cd}`$.
 
 ### Task 1c
 Given the matrix
-$$
+$$`
 \mathbf{T}_\text{bc} = \left[
     \begin{matrix}
         1 & 0 & 0 & 4 \\
@@ -23,7 +23,7 @@ $$
         0 & 0 & 0 & 1
     \end{matrix}
 \right]
-$$
+`$$
 find the transform matrix $\mathbf{T}_\text{ab}$
 
 ## Task 2: Denavit-Hartenberg Table
