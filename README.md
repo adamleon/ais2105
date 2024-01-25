@@ -43,11 +43,26 @@ docker compose up mac
 There is a problem that OpenGL does not work because docker cannot find a graphics driver. If you find a solution, contact me.
 
 # On Linux
-This has not been tested, but run the following code and pray:
+Most modern Linux distribution have some form of authentication when connecting to the X11 server. Therefore docker will need some way to authenticate their permission to open GUI applications.
+Run the following on your host system first to allow for GUI applications:
+```
+xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f .docker.xauth nmerge -
+```
+
+Ignore below output, it is expected:
+```
+xauth:  file .docker.xauth does not exist
+```
+
+Run the following and pray:
 ```
 docker compose up linux
 ```
 
+You might need root permissions to run a container, this can be avoided by adding your user to the docker group:
+```
+sudo usermod -a -G docker $USER
+```
 
 # Running Docker
 Every time you want to use this project, run

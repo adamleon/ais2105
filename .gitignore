@@ -52,3 +52,6 @@ CATKIN_IGNORE
 
 # IDE
 .vscode/
+
+# X11 Authentication cookie
+.docker.xauth
