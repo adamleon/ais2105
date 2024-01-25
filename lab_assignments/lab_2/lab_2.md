@@ -14,7 +14,7 @@ Find the inverse $`\mathbf{T}_\text{ca}`$ and show that $`\mathbf{T}_\text{ca}\m
 
 ### Task 1c
 Given the matrix
-$$`
+```math
 \mathbf{T}_\text{bc} = \left[
     \begin{matrix}
         1 & 0 & 0 & 4 \\
@@ -23,7 +23,7 @@ $$`
         0 & 0 & 0 & 1
     \end{matrix}
 \right]
-`$$
+```
 find the transform matrix $\mathbf{T}_\text{ab}$
 
 ## Task 2: Denavit-Hartenberg Table
