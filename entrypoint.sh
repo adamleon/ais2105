@@ -1,5 +1,5 @@
 #!/bin/bash
 
-colcon build
+source /opt/ros/humble/setup.bash && colcon build
 
 tail -f /dev/null

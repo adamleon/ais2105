@@ -41,6 +41,7 @@ ENV MAIN_WS  /workspaces/ros2_ws
 RUN mkdir -p $MAIN_WS/src
 WORKDIR $MAIN_WS
 
+
 COPY entrypoint.sh /setup/entrypoint.sh
 ENTRYPOINT ["/setup/entrypoint.sh"]
 
