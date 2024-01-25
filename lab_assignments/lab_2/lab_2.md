@@ -4,7 +4,7 @@ The purpose of this lab assignment is to learn how to set up a robot workspace a
 ## Task 1: Transform Matrices
 In the image below you there are four reference frames. {A} is the workspace frame, {B} is the gripper (or end-effector) frame, {C} is the camera frame and {D} is the workpiece frame. 
 
-![Workarea](/lab_assignments/lab_2/images/workarea.png)
+![workarea](https://github.com/adamleon/ais2105/assets/1880042/4b9e9013-85ed-4a54-92c5-d358a5821ca6)
 
 ### Task 1a
 Using the dimensions  given in the figure, find the transform matrix $`\mathbf{T}_\text{ad}`$, $`\mathbf{T}_\text{ac}`$ and $`\mathbf{T}_\text{cd}`$
@@ -29,7 +29,7 @@ find the transform matrix $\mathbf{T}_\text{ab}$
 ## Task 2: Denavit-Hartenberg Table
 In the image below, you see six reference frames that are aligned with the joints of a UR5 robot.
 
-![UR5 with reference frames](ur5_frames.png)
+![UR5 with reference frames](https://github.com/adamleon/ais2105/assets/1880042/f03ae4cd-1861-4d15-aedd-02d3bf2210f4)
 
 Use the frames in the image the technical drawing on page 3 [here](https://www.synerbotwelding.com/wp-content/uploads/2020/09/area-de-trabajo-de-ur5.pdf) and make a Denavit-Hartenberg table for a UR5 robot.
 
