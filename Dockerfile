@@ -44,6 +44,7 @@ WORKDIR $MAIN_WS
 
 
 COPY entrypoint.sh /setup/entrypoint.sh
+RUN chmod +x /setup/entrypoint.sh
 ENTRYPOINT ["/setup/entrypoint.sh"]
 
 SHELL ["/bin/bash", "-c"]
