@@ -16,12 +16,16 @@ What singularities does it have? And which ones are physically possible to reach
 
 ### Task 1c
 Assume that $d_1$ and $\theta_3$ are fixed, such that the gripper is touching the table, and that therefore $z=0$. We only focus on moving the robot along the $xy$-plane. Write an equation 
-$$\left[\begin{matrix}\theta_2\\\theta_3\end{matrix}\right] = f(x,y)$$
+$$
+\left[\begin{matrix}\theta_2\\\theta_3\end{matrix}\right] = f(x,y)
+$$
 so that you can determine the correct $\theta_2$ and $\theta_3$ given an $(x,y)$ coordinate.
 
 ### Task 1d
 Expand the equation $f(x,y)$ to 
-$$\left[\begin{matrix}d_1\\\theta_2\\\theta_3\\\theta_4\end{matrix}\right] = f(x,y,z,\phi)$$
+$$
+\left[\begin{matrix}d_1\\\theta_2\\\theta_3\\\theta_4\end{matrix}\right] = f(x,y,z,\phi)
+$$
 such $d_1$ moves the arm up or down from 0 to 1 meter.
 
 ## Task 2: Path Planning
