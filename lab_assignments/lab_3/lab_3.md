@@ -30,7 +30,7 @@ Expand the equation $f(x,y)$ to
 \left[\begin{matrix}d_1\\\theta_2\\\theta_3\\\theta_4\end{matrix}\right] = f(x,y,z,\phi)
 ```
 
-such $d_1$ moves the arm up or down from 0 to 1 meter.
+such $d_1$ moves the arm up or down from 0 to 1 meter. $\theta_2$, $\theta_3$ and $\theta_4$ can rotate $360^\circ$.
 
 ## Task 2: Path Planning
 Given the 
