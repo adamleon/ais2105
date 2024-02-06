@@ -25,6 +25,7 @@ $$\left[\begin{matrix}d_1\\\theta_2\\\theta_3\\\theta_4\end{matrix}\right] = f(x
 such $d_1$ moves the arm up or down from 0 to 1 meter.
 
 ## Task 2: Path Planning
+Given the 
 
 ## Task 3: Commanding a Robot
 
