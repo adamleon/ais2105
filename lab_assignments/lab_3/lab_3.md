@@ -95,3 +95,16 @@ Run the command
 ros2 launch ur_robot_driver test_scaled_trajectory_joint_controller
 ```
 and verify that the robot is moving.
+
+### Task c: MoveIt
+Exit the `test_scaled_trajectory_joint_controller` node and run the command
+```
+ros2 launch ur_moveit_config ur_moveit.launch.py ur_type:=ur3e launch_rviz:=true 
+```
+and set the `ur_type` to whichever robot you are using.
+
+In RViz use the marker to move the orange robot around. On the "MotionPlanning" panel on the left, go to the "Planning" tab and press the "Plan" button and make MoveIt plan a path for the robot. To loop the animation, look for "MotionPlanning" in the list in the "Display" panel, expand it and expand the "Planned Path" and check "Loop Animation".
+
+If you think the planned path seems okay, press the "Execute" button and see the robot move.
+
+If you wish to "restart" the marker, you can select "same as start" in the dropdown menu under Goal State.
