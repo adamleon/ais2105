@@ -33,8 +33,65 @@ Expand the equation $f(x,y)$ to
 such $d_1$ moves the arm up or down from 0 to 1 meter. $\theta_2$, $\theta_3$ and $\theta_4$ can rotate $360^\circ$.
 
 ## Task 2: Path Planning
-Given the 
+Given the robot in task 1. Draw or somehow describe a path that can be reached through a straight line in joint space, but that cannot be reached through a linear motion.
+
+A linear movement can be described with the equation
+```math
+\mathbf{X}(s)=\mathbf{X}_\text{start}+s(\mathbf{X}_\text{end}-\mathbf{X}_\text{start})
+```
+Where $s$ is a number between 0 and 1 inclusive, and $\mathbf{X}$ is
+```math
+\mathbf{X}=\left[\begin{matrix}x\\y\\z\end{matrix}\right]
+```
+Write a function $\mathbf{X}(s)$ which draws an arc from $\mathbf{X}_\text{start}$ to $\mathbf{X}_\text{end}$. The arc should lie on a circle with the center point $\mathbf{c}$, which is a vector with an $x$, $y$ and $z$ coordinate.
+
+Hint: You can define $\mathbf{r}$ so that $\mathbf{X}_\text{start}=\mathbf{r}+\mathbf{c}$, meaning a vector from the center of the circle to the start point. The $\mathbf{r}$ vector can be rotated with an angle which will draw the arc and end at $\mathbf{X}_\text{end}=\mathbf{r}_\text{rot}+\mathbf{c}$. Finding the rotation axis and angle is the challenge.
 
 ## Task 3: Commanding a Robot
+Find a robot which has a Microsoft Surface installed next to it. Turn on the robot and start up the Surface laptop. The password is "iir_robot".
 
-## Task 4: 
+### Task a: Starting ROS2 Control
+Run the command in a new terminal
+```
+ros2 launch ur_robot_driver ur3e.launch.py robot_ip:=192.168.1.102
+```
+but change the "ur3e" to whichever robot model you are using.
+
+Open a new terminal (or tab) and use the command
+```
+top
+```
+to see all running programs and find the "ur-ros2-control". Use "ctrl+C" to exit, and look at the PID number for "ur-ros2-control". Then run the code
+```
+chrt -p 99 <pid>
+```
+which will set the priorty of the program to 99.
+
+Verify that the program is running in realtime by running
+```
+top
+```
+again and see that the Priority is set to "rt" for "ur_ros2_control".
+
+On the robot teachpad, start up the robot and run the program "ROS2 Control.urscript".
+
+Verify in the first terminal that the PC has established a connection with the robot.
+
+### Task b: Moving the robot
+In a new terminal run the command
+```
+ros2 control list_controllers
+```
+and verify that the "scaled_trajectory_joint_controller" is active. If not, run the command
+```
+ros2 control set_controller_state scaled_trajectory_controller active
+```
+Remember that you can autocomplete by pressing the tab key.
+
+Move the robot to the joint angles [0,-90,0,-90,0,0] through the teachpad, go back to the program and press play.
+
+Run the command
+```
+ros2 launch ur_robot_driver test_scaled_trajectory_joint_controller
+```
+and verify that the robot is moving.
