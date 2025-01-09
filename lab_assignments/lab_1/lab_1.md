@@ -1,105 +1,135 @@
-# Lab Assignment 1: Publish and Subscribe
-The purpose of this lab assignment is to learn how to use ROS2, specifically how to send and receive data, and how to create programs to manage it.
+# Lab 1 - Topics og Parameters
+I denne laboppgaven skal dere lage en PID-kontroller for et ledd til en robot. Dere skal også lage en simulator av leddet for å teste styresystemet.
 
-## Task 1: Getting Started
-After starting up the docker container and attaching to the container with your IDE (see Running Docker in the README file), you should be able to have a terminal and a working space which runs the ROS2 virtual machine.
+Dette er en oppgave for to personer, hvor dere gjør to forskjellige oppgaver som til sammen blir en helhet. Den ene lager kontrolleren (oppgaver merket med A) og den andre lager simulatoren (oppgaver merket med B). På grunn av hvordan ROS2 er oppbygd skal PCene deres kunne kommunisere med hverandre hvis dere er på samme nettverk. Merk at dere burde jobbe for at begge blir ferdige med oppgave 1 før dere begynner på oppgave 2, osv. Fordi det er enklere å sjekke at nodene fungerer når de blir testet sammen.
 
-To see if ROS2 is running correctly, run
+Det er lurt om dere går gjennom veiledninger fra https://docs.ros.org/en/jazzy/Tutorials.html. Hvis dere har gått gjennom Beginner CLI og Beginner Client, vil denne laben være mye enklere. Du kan selv velge om du vil programmere i C++ eller Python. Python er muligens enklest i starten, men C++ er muligens enklest i lengden. Alt innen ROS fungerer like bra uansett om du velger C++ eller Python, så du kan bytte frem og tilbake slik du vil.
+
+Det er kan også være nyttig å jobbe sammen med et repository. Det er flere ganger hvor du trenger filer/kode fra makkeren din, så da er det enklest å gjøre det via repository.
+# Oppgave 1
+## Del A
+Det første du skal gjøre er å lage en ny [ROS2 pakke](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html). Kall den `pid_controller` eller noe annet passende. Du velger selv om du vil skrive den i C++ eller Python (ament_cmake eller ament_python). Koden beskrevet i oppgaven er i Python.
+
+Lag så en ny fil i pakken hvor du legger koden (i `pid_controller` hvis du velger Python, eller `src` for C++). Kall den `pid_controller_node.py` (eller `.cpp`).
+
+Lag en ny klasse som heter `pidController` som har fem variabler `p`, `i`, `d`, `reference` og `voltage`, og en `update`-funksjon som oppdaterer `voltage` basert på de andre variablene. Lag også flere variabler og funksjoner for å løse dette.
+
+Når klassen fungerer, endre koden så du inkluderer en [ROS2 node](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html) (for eksempel ved å lage klassen `def PIDControllerNode(Node):`) som har en instans av `pidController` der du initialiserer den med litt tilfeldige PID-parametere. Den skal også ha en *publisher* som heter `publish_voltage` som publiserer en `Float64` melding med `voltage`-verdien, og en *subscriber* som heter `measured_angle` og en callback-funksjon kalt `measurement_listener` som mottar en `Float64`-melding, bruker den verdien til å kalle `update` til PID-kontrolleren og kaller på `publish_voltage` for å publisere det oppdaterte pådraget.
+
+Gjør de nødvendige endringene i pakken for å bygge (for eksempel å endre `setup.py` til å legge til den nye noden `pid_controller_node = pid_controller_node.main`). Test ut noden ved å kjøre
 ```
-ros2 run demo_nodes_py talker
+ros2 run pid_controller pid_controller_node
 ```
-You will see that the `talker` node starts publishing "Hello world" messages
-
-Start up another terminal (in your IDE) and run
+For å se verdiene som blir publisert fra topic-en `voltage` kan du kjøre
 ```
-ros2 run demo_nodes_py listener
+ros2 topic echo /voltage
 ```
-You will see that the `listener` node starts reading the messages published from the `talker` node.
+Du kan også kjøre `rqt` for å få et visualiseringsverktøy. Velg `Plugins>Visualization>Plot` for å få opp en graf. Under Topic kan du velge /voltage/data (altså "topic-navn"/"navn på variabel i meldingen")
 
-If you run the command (in yet another terminal)
+Du kan teste om noden fungerer ved å publisere en melding fra kommandolinjen
+`ros2 topic pub -1 /measured_angle /std_msgs/Float64 "{data: 5.0}"`
+(Oversatt: Publiser 1 melding til `/measured_angle` av typen `/std_msgs/Float64` med beskjeden `{data: 5.0}` som er skrevet i YAML)
+
+For å sjekke at dette fungerer med del B, kan dere koble PC-ene sammen med Ethernett-kabel (altså koble de til samme vegg/bord). Hvis person A kjører
+`ros2 run pid_controller pid_controller_node`
+og person B kjører
+`ros2 run joint_simulator joint_simulator_node`
+Det skal nå være slik at PC-ene kommuniserer med hverandre, og `effort`-meldingene sendes fra ene og mottas av andre, det samme med `measured_value`.
+## Del B
+Det første du skal gjøre er å lage en ny [ROS2 pakke](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html). Kall den `joint_simulator` eller noe annet passende. Du velger selv om du vil skrive den i C++ eller Python (ament_cmake eller ament_python). Koden beskrevet i oppgaven er i Python.
+
+Lag så en ny fil i pakken hvor du legger koden (i `joint_simulator` hvis du velger python, eller `src` for C++). Kall den `joint_simulator_node.py` (eller `.cpp`).
+
+Lag en ny klasse som heter `jointSimulator` som har fire variabler `angle`, `angular_velocity`, `voltage` og `noise`, og en `update`-funksjon som oppdaterer `angle` basert på formelen
+$$
+\frac{\theta(s)}{V(s)} = \frac{K}{s(Ts+1)}
+$$
+Der $\theta$ er vinkel, $V$ er spenning og $K=$ og $T=$ er konstanter. Lag også flere variabler for å løse dette. Enn så lenge kan du sette `noise=0`.
+
+Når klassen fungerer, endre koden så du inkluderer en [ROS2 node](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html) (for eksempel ved å lage klassen `def JointSimulatorNode(Node):`) som har en instans av `jointSimulator`. Den skal også ha en *publisher* som heter `publish_angle` som publiserer en `Float64` melding med `angle`-verdien, og en *subscriber* som heter `input_voltage` og en callback-funksjon kalt `voltage_listener` som mottar en `Float64`-melding, bruker den verdien til å kalle `update` til simulatoren og regner den nye vinklen og kaller på `publish_angle` for å publisere det oppdaterte vinkelen.
+
+Gjør de nødvendige endringene i pakken for å bygge (for eksempel å endre `setup.py` til å legge til den nye noden `joint_simulator_node = joint_simulator_node.main`). Test ut noden ved å kjøre
 ```
-ros2 topic list
+ros2 run joint_simulator joint_simulator
 ```
-You get a list of all the topics available on the network. You will see the `\chatter` topic listed, which is the topic which `talker` is **publishing** messages from, while `listener` **subscribes** to the `/chatter` topic.
-
-Run
+For å se verdiene som blir publisert fra topic-en `voltage` kan du kjøre
 ```
-ros2 topic info /chatter
+ros2 topic echo /angle
 ```
-You see more information about the `/chatter` topic. It sends messages of type `std_msgs/msg/String`, which is only a string. You can also see how many are subscribing and publishing to this topic, which should be 1 for both if you have `talker` and `listener` running. You can run more `talker`s and `listener`s simultaneously and see what happens.
+Du kan også kjøre `rqt` for å få et visualiseringsverktøy. Velg `Plugins>Visualization>Plot` for å få opp en graf. Under Topic kan du velge /angle/data (altså "topic-navn"/"navn på variabel i meldingen")
 
-You can run the command
+Du kan teste om noden fungerer ved å publisere en melding fra kommandolinjen
+`ros2 topic pub -1 /input_voltage /std_msgs/Float64 "{data: 5.0}"`
+(Oversatt: Publiser 1 melding til `/input_voltage` av typen `/std_msgs/Float64` med beskjeden `{data: 5.0}` som er skrevet i YAML).
+
+## Del A og B
+For å sjekke at dette fungerer mellom person A og person B, kan dere koble PC-ene sammen med Ethernett-kabel (altså koble de til samme vegg/bord). Hvis person A kjører
+`ros2 run pid_controller pid_controller_node`
+og person B kjører
+`ros2 run joint_simulator joint_simulator_node`
+Det skal nå være slik at PC-ene kommuniserer med hverandre, og `voltage`-meldingene sendes fra ene og mottas av andre, det samme med `measured_angle`. Hvis du nå endrer på `reference` i PID-noden, skal du se at `measured_angle` også endrer seg.
+# Oppgave 2
+## Del A
+Det siste du skal gjøre er å parameterisere PID parameterene. Dette gjør du ved å endre på PID-kontrollernoden. Eksempler er vist [her](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-Python.html)
+Setter man `self.declare_parameter('p', 1.0)` vil du sette `p=1` på parameterserveren. Du kan rett etterpå i koden skrive
+`self.p = self.get_parameter('p').get_parameter_value().float64_value` for å hente parameteren fra parameterserveren og sette variabelen din til den. Gjør så det samme for I og D
+
+Du kjører noden kan du kjøre 
+`ros2 run pid_controller pid_controller_node p:=10.0 d:=1.0` og se at parameterene blir satt når du kjører.
+
+Du kan også se parameterene ved å kjøre
+`ros2 param list` og `ros2 param get /pid_controller_node p`
+
+Hvis du prøver å endre parametrene med
+`ros2 param set /pid_controller_node p 5.0` vil du legge merke til at parameteren endrer seg på parameterserveren, men ikke i noden. Dette er fordi noden ikke har blitt fortalt at parameteren har blitt endret. Dette kan du endre på ved å kalle funksjonen 
+`self.add_on_set_parameters_callback(self.parameter_callback)`
+Etter at alle parameterene er deklarert. Deretter definerer du funksjonen `parameter_callback`
+```python
+def parameter_callback(self, params):
+        """Callback to handle parameter updates."""
+        for param in params:
+            if param.name == 'p':
+                if (param.value >= 0.0):
+                    self.p = param.value
+                    self.get_logger().info(f' p was set: {self.p}')
+        # same for i and d
+
 ```
-rqt_graph
+Merk at funksjonen kun oppdaterer P. Gjør endringer for å oppdatere I og D også.
+
+Når du nå kaller `ros2 param set...` så vil også parameterene i noden endre seg.
+## Del B
+Det siste du skal gjøre er å parameterisere simulatorverdiene. Dette gjør du ved å endre på simulatornoden. Eksempler er vist [her](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-Python.html)
+Setter man `self.declare_parameter('noise', 1.0)` vil du sette `noise=1` på parameterserveren. Du kan rett etterpå i koden skrive
+`self.noise = self.get_parameter('noise').get_parameter_value().float64_value` for å hente parameteren fra parameterserveren og sette variabelen din til den. Gjør så det samme for K og T.
+
+Du kjører noden kan du kjøre 
+`ros2 run joint_simulator joint_simulator_node K:=10.0 T:=1.0` og se at parameterene blir satt når du kjører.
+
+Du kan også se parameterene ved å kjøre
+`ros2 param list` og `ros2 param get /joint_simulator_node K`
+
+Hvis du prøver å endre parametrene med
+`ros2 param set /joint_simulator_node K 5.0` vil du legge merke til at parameteren endrer seg på parameterserveren, men ikke i noden. Dette er fordi noden ikke har blitt fortalt at parameteren har blitt endret av parameterserveren. Dette kan du endre på ved å kalle funksjonen 
+`self.add_on_set_parameters_callback(self.parameter_callback)`
+etter at alle parameterene er deklarert. Deretter definerer du funksjonen `parameter_callback`
+```python
+def parameter_callback(self, params):
+        """Callback to handle parameter updates."""
+        for param in params:
+            if param.name == 'noise':
+                if (param.value >= 0.0):
+                    self.noise = param.value
+                    self.get_logger().info(f' noise was set: {self.noise}')
+        # same for K and T
+
 ```
-which shows who are connected to who with topics.
+Merk at funksjonen kun oppdaterer noise. Gjør endringer for å oppdatere K og T også.
 
-## Task 2: Making a publisher and subscriber
-Follow the tutorial here to make a publisher and subscriber 
-
-[Python Tutorial](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html)
-
-[C++ Tutorial](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html)
-
-If you're unsure, Python is probably easiest.
-
-If you want an introductory tutorial to ROS2, you can also follow these:
-[Understanding ROS2](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools.html#)
-[Creating a workspace](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html)
-[Creating a package](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html)
-
-### Monitoring a numerical message
-The publisher/subscriber tutorials describe how to make a `talker` and `listener`. We will now try to make this more useful.
-
-A problem in ROS2 (which we will solve now) is to draw graphs of a robot's joints. The problem being that when `rqt` listens to messages, it only accepts to draw Float64 values, while the robot's joints are published as an array of Float64.
-
-Your task is to create a new node, which subscribes to the robot's joints and publishes each of the 6 values into six different topics, so that the `rqt` program can subscribe to each of the six and plot them in a graph. But, let's take it one step at a time.
-
-### Creating six publishers
-Stop all the `talker`s and `listener`s (``ctrl + C` in every terminal) and continue reading.
-
-Create a new node and follow the same steps as in the tutorial where you made a publisher, except give it a new name (your choice, but "joint_value_splitter" is an example).
-
-1. You now must change the publisher so that it doesn't use `std_msgs/msg/String`, but `std_msgs/msg/Float64`, and change the publisher to publish a number rather than a string (use a random number, or sine function or something). Also change the name of the publisher topic to "shoulder_pan_joint".
-2. Build the node and check that it runs correctly
-3. Run `rqt` in a new terminal, and under `plugins` you find a visualization plugin called Plot.
-4. From there find the topic "shoulder_pan_joint/data" and click the "+" symbol to put it in the graph. You should now see the graph update.
-5. Now, you can extend the number of publishers. Make five new publishers, each which publishes some number function (your choice). Name the topics "shoulder_lift_joint", "elbow_joint", "wrist_1_joint", "wrist_2_joint" and "wrist_3_joint".
-6. Inside `rqt` use the "+" to add all five publishers.
-
-Now that you have a system which publishes six values, we will continue to create a subscriber.
-
-## Task 3: Monitoring a robot
-### Simulation setup
-Start a new terminal and run the command
-```
-ros2 launch ur_simulation_gazebo ur_sim_control.launch.py
-```
-
-This will launch two windows (and a lot of other stuff): RViz and Gazebo.
-
-Gazebo is a physics simulator, which in our case simulates a UR robot, including kinematics and dynamics. We can explore this in a later lab assignment.
-
-RViz is a visualization tool, which in our case visualizes the UR robot. This is generally our interface into controlling the robot. RViz takes the current measurements from the robot and displays what the robot looks like. Currently it shows the same as the simulator, but when connecting to a real robot, it will show the robots position.
-
-Run now the command in a new terminal
-```
-ros2 launch ur_robot_driver test_joint_trajectory_controller.launch.py
-```
-The `ur_robot_driver` is the control interface which sends commands to the robot, and the `test_joint_trajectory_controller` will sets up a simple program that moves the robot between 4 different poses. You can see now that the simulation iterates through the four poses, and that RViz mirrors the movements.
-
-If you think the windows are slow and in the way, you can use `ctrl+C` to terminate the programs. If you want to start the simulation and movement again you run the commands
-```
-ros2 launch ur_simulation_gazebo ur_sim_control.launch.py
-```
-and
-```
-ros2 launch ur_robot_driver test_joint_trajectory_controller.launch.py
-```
-
-### Creating a subscriber
-Next we will add a subscriber to your node. Look at the subscriber tutorial for inspiration and make the following:
-
-1. Initialize a subscriber that takes in a sensor_msgs/msg/JointStateMsg. Remember to use import (Python) or include (C++), and to update the `packages.xml` (and CMakeLists.txt in C++). The topic to subscribe to is `/joint_states`
-2. Change the `listener_callback` so that it takes in a JointStateMsg and reads `position[i]` where `i` refers to a specific joint (0 is "shoulder_pan_joint", 1 is "shoulder_lift_joint", etc.). Read each of the values and publish them on the correct publishing topic
-3. Build the node and run the simulator and plotter to see what happens.
+Når du nå kaller `ros2 param set...` så vil også parameterene i noden endre seg.
+## Del A og B
+For å sjekke at dette fungerer mellom person A og person B, kan dere koble PC-ene sammen igjen. Hvis person A kjører
+`ros2 run pid_controller pid_controller_node`
+og person B kjører
+`ros2 run joint_simulator joint_simulator_node`
+Dere vil nå se at både `measured_angle` og `voltage` endrer karakteristikk hvis dere endrer på parameterne.
