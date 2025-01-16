@@ -44,9 +44,9 @@ Lag en ny klasse som heter `jointSimulator` som har fire variabler `angle`, `ang
 $$
 \frac{\theta(s)}{V(s)} = \frac{K}{s(Ts+1)}
 $$
-Der $\theta$ er vinkel, $V$ er spenning og $K=$ og $T=$ er konstanter. Lag også flere variabler for å løse dette. Enn så lenge kan du sette `noise=0`.
+Der $\theta$ er vinkel, $V$ er spenning og $K=230 \text{rad}$ og $T=0.15\frac{\text{rad}}{\text{s}}$ er konstanter. Lag også flere variabler for å løse dette. Enn så lenge kan du sette `noise=0`.
 
-Når klassen fungerer, endre koden så du inkluderer en [ROS2 node](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html) (for eksempel ved å lage klassen `def JointSimulatorNode(Node):`) som har en instans av `jointSimulator`. Den skal også ha en *publisher* som heter `publish_angle` som publiserer en `Float64` melding med `angle`-verdien, og en *subscriber* som heter `input_voltage` og en callback-funksjon kalt `voltage_listener` som mottar en `Float64`-melding, bruker den verdien til å kalle `update` til simulatoren og regner den nye vinklen og kaller på `publish_angle` for å publisere det oppdaterte vinkelen.
+Når klassen fungerer, endre koden så du inkluderer en [ROS2 node](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html) (for eksempel ved å lage klassen `def JointSimulatorNode(Node):`) som har en instans av `jointSimulator`. Den skal også ha en *publisher* som heter `publish_angle` som publiserer en `Float64` melding med `angle`-verdien, og en *subscriber* som heter `input_voltage` og en callback-funksjon kalt `voltage_listener` som mottar en `Float64`-melding, som oppdaterer `voltage`. Noden skal også ha en `wall_timer` (slik som i tutorialen) som kaller `update` til simulatoren og regner den nye vinklen og kaller på `publish_angle` for å publisere det oppdaterte vinkelen.
 
 Gjør de nødvendige endringene i pakken for å bygge (for eksempel å endre `setup.py` til å legge til den nye noden `joint_simulator_node = joint_simulator_node.main`). Test ut noden ved å kjøre
 ```
