@@ -75,7 +75,7 @@ Setter man `self.declare_parameter('p', 1.0)` vil du sette `p=1` på parameterse
 `self.p = self.get_parameter('p').get_parameter_value().float64_value` for å hente parameteren fra parameterserveren og sette variabelen din til den. Gjør så det samme for I og D
 
 Du kjører noden kan du kjøre 
-`ros2 run pid_controller pid_controller_node p:=10.0 d:=1.0` og se at parameterene blir satt når du kjører.
+`ros2 run pid_controller pid_controller_node --ros-args -p p:=10.0 -p d:=1.0` og se at parameterene blir satt når du kjører.
 
 Du kan også se parameterene ved å kjøre
 `ros2 param list` og `ros2 param get /pid_controller_node p`
@@ -104,7 +104,7 @@ Setter man `self.declare_parameter('noise', 1.0)` vil du sette `noise=1` på par
 `self.noise = self.get_parameter('noise').get_parameter_value().float64_value` for å hente parameteren fra parameterserveren og sette variabelen din til den. Gjør så det samme for K og T.
 
 Du kjører noden kan du kjøre 
-`ros2 run joint_simulator joint_simulator_node K:=10.0 T:=1.0` og se at parameterene blir satt når du kjører.
+`ros2 run joint_simulator joint_simulator_node --ros-args -p K:=10.0 -p T:=1.0` og se at parameterene blir satt når du kjører.
 
 Du kan også se parameterene ved å kjøre
 `ros2 param list` og `ros2 param get /joint_simulator_node K`
