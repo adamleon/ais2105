@@ -8,6 +8,7 @@ I dette prosjektet skal dere:
 - En launch fil som kan bytte mellom Qube og simulator.
 - Visualisering i RViz
 - Styre vinkel via en terminal og/eller GUI.
+
 Dere skal levere inn koden, med dokumentasjon som viser hvordan systemene funker sammen, og kode som er dokumentert godt nok til å forstå hvordan den fungerer.
 # Forberedelser
 Lag en repository som dere kaller `qube` eller noe lignende. Den skal du legge inni `src` i en av workspace-ene dere planlegger å bruke (dere kan for eksempel lage en ny en for prosjektet). Inni her skal dere ha tre ROS2 pakker
