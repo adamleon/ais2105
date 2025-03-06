@@ -49,7 +49,9 @@ Alt dette er for å gjøre beskrivelsen gjenbrukbar. Det er meningen at makro-fi
 
 Scene-filen er nettopp det. En veldig enkel scene: En Qube som står i origo. Denne skal kunne brukes til å visualisere beskrivelsen i makroen.
 
-Siste dere skal gjøre er å lage en launch-fil i en launch-mappe, som heter `view_qube.launch.py`3d du xxxxxxxxxxxxxxxxxxxx# Oppgave 2: qube_driver
+Siste dere skal gjøre er å lage en launch-fil i en launch-mappe, som heter `view_qube.launch.py`
+
+# Oppgave 2: qube_driver
 Neste dere skal gjøre er å koble opp Quanser Quben. Det gjøres ved at dere skal bruke ROS2 Control til å kontrollere roboten. ROS2 Control er et sett med noder som kobler sammen styresystemer i ROS2 og kommunikasjonen opp mot roboten.
 
 Som dere kan se under [arkitekturen](https://control.ros.org/rolling/doc/getting_started/getting_started.html#architecture) kan dere se at ROS2 Control deler seg inn i to:
