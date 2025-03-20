@@ -54,10 +54,18 @@ Siste dere skal gjøre er å lage en launch-fil i en launch-mappe, som heter `vi
 # Oppgave 2: qube_driver
 Neste dere skal gjøre er å koble opp Quanser Quben. Det gjøres ved at dere skal bruke ROS2 Control til å kontrollere roboten. ROS2 Control er et sett med noder som kobler sammen styresystemer i ROS2 og kommunikasjonen opp mot roboten.
 
+Det første du må gjøre er å sikre at du har ROS2 Control installert
+```
+sudo apt install -y ros-jazzy-ros2-control ros-jazzy-ros2-controllers
+```
+
 Som dere kan se under [arkitekturen](https://control.ros.org/rolling/doc/getting_started/getting_started.html#architecture) kan dere se at ROS2 Control deler seg inn i to:
 - En controller-del hvor alle styresystemene opererer. Dette kan være alt fra styring av IO til PID-controllere, til styring via inverskinematikk.
 - En hardware-del hvor all kommunikasjonen opp mot maskinvaren foregår. Dette kan være EtherCAT-kommunikasjon opp mot en robot, simulert kommunikasjon mot en simulator, eller som i vårt tilfelle, seriellkommunikasjon mot en Arduino (eller Teensy).
 Hardware-delen er veldig spesifikk, og er derfor allerede laget i en egen pakke som heter `qube_driver`. Denne pakken kan du laste ned [her](https://github.com/adamleon/qube_driver) (eller aller helst bruke `git clone`). Dere trenger ikke å gjøre noen spesifikke endringer på denne akkurat nå.
+
+Bygger du workspace nå med `qube_driver` lastet ned, skal du ikke ha noen problemer. Det vil komme noen warnings, skyld på Lars Ivar. De er bare å ignorere.
+
 # Oppgave 3: qube_bringup
 
 Lag en ny pakke som heter `qube_bringup` bruk ament_python som byggetype. Denne pakken skal inneholde launch- og konfigurasjonsfiler for flette sammen Qube-systemet.
