@@ -80,7 +80,23 @@ TIlslutt skal dere lage en launch fil, som heter `bringup.launch.py`. Den skal s
 
 Det som skjer når dere kjører denne filen er at dere starter opp robot state publisher, som holder orden på robotens tilstand. Dere starter også opp en ROS2 control controller manager som håndterer samhandlingen mellom controller-delen og hardware-delen i qube_driver. Videre starter opp joint state broadcaster, som leser verdiene fra hardware-delen og publiserer de på `/joint_states`. Kjører dere `ros2 topic echo /joint_states` vil dere se at posisjon, og hastighet fra quben blir publisert. Tilslutt starter velocity controller opp. Det er en type kontroller som lastes inn i controller-delen og sender hastighetskommandoer tilbake til hardware-delen.
 # Oppgave 4: qube_controller
-Den siste delen er å styre quben. Dere skal lage en node som abonnerer til `/joint_states` og henter ut posisjon og hastighet til quben. Videre skal dere lage en PID-controller som regulerer og gir ut et hastighets-pådrag. Det skal dere publisere til `/velocity_controller/command`. Merk at meldingstypen er `Float64MultiArray` og krever derfor en spesiell måte å populeres på.
+Den siste delen er å styre quben. Dere skal lage en node som abonnerer til `/joint_states` og henter ut posisjon og hastighet til quben. Videre skal dere lage en PID-controller som regulerer og gir ut et hastighets-pådrag. Det skal dere publisere til `/velocity_controller/commands`. Merk at meldingstypen er `Float64MultiArray` og krever derfor en spesiell måte å populeres på. Les på dokumentasjonen for å se hvordan.
+
+# Koble opp Quben
+For å koble til Quben, så må dere finne ut hvilken `device` og `baud_rate` som dere må sette opp. Baud rate er 115200 med mindre noe annet er sagt. Device er navnet på USB-porten. For å finne navnet, kan du kjøre
+``
+ls /dev/tty*
+``
+Den vil liste opp alle kommunikasjonene som er tilgjengelig på PCen. Du vil finne en som heter /dev/ttyACMX, hvor X er et tall, vanligvis 0. Dette er navnet `/dev/ttyACMX`.
+
+Hvis dere starter launch-filen og dere for en nserialIOException, med en "Permission Denied", så er det fordi du ikke har gitt lese/skriverettigheter til USB-porten. For å gi tilgang kjører dere kommandoen
+``
+sudo chmod 666 /dev/ttyACMX
+``
+`chmod` står for CHange MODe, for å endre rettigheter. 666 står for hvilke rettigheter gis til hvem. Det første tallet er filens eier, andre tallet er gruppen filen er i, og siste tallet er alle andre. Tallet er et binært tall som setter bit for read, write og execute (rwx), 6=110 som gir rettigheter til lesing og skriving.
+
+Merk også at hvis du får feilmelding om "motor_joint not found", så er det fordi qube_driver antar at URDF-en din har et ledd som heter "motor_joint", altså det roterende leddet i Quben. Hvis du har kalt det "rotary_joint", "disk_joint" eller noe annet, så får du feil.
+
 # Oppgave 5: Selvevaluering
 Det siste dere skal gjøre er å evaluere deres eget arbeid. Dette gjør dere individuelt, og leveres inn på blackboard sammen med en link til repo-et dere har laget.
 
