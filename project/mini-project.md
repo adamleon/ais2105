@@ -84,15 +84,15 @@ Den siste delen er å styre quben. Dere skal lage en node som abonnerer til `/jo
 
 # Koble opp Quben
 For å koble til Quben, så må dere finne ut hvilken `device` og `baud_rate` som dere må sette opp. Baud rate er 115200 med mindre noe annet er sagt. Device er navnet på USB-porten. For å finne navnet, kan du kjøre
-``
+```
 ls /dev/tty*
-``
+```
 Den vil liste opp alle kommunikasjonene som er tilgjengelig på PCen. Du vil finne en som heter /dev/ttyACMX, hvor X er et tall, vanligvis 0. Dette er navnet `/dev/ttyACMX`.
 
 Hvis dere starter launch-filen og dere for en nserialIOException, med en "Permission Denied", så er det fordi du ikke har gitt lese/skriverettigheter til USB-porten. For å gi tilgang kjører dere kommandoen
-``
+```
 sudo chmod 666 /dev/ttyACMX
-``
+```
 `chmod` står for CHange MODe, for å endre rettigheter. 666 står for hvilke rettigheter gis til hvem. Det første tallet er filens eier, andre tallet er gruppen filen er i, og siste tallet er alle andre. Tallet er et binært tall som setter bit for read, write og execute (rwx), 6=110 som gir rettigheter til lesing og skriving.
 
 Merk også at hvis du får feilmelding om "motor_joint not found", så er det fordi qube_driver antar at URDF-en din har et ledd som heter "motor_joint", altså det roterende leddet i Quben. Hvis du har kalt det "rotary_joint", "disk_joint" eller noe annet, så får du feil.
