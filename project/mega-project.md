@@ -1,6 +1,7 @@
 På overordnet nivå skal dere programmere en UR-robot til å ta bilde av noen fargede kuber som skal kunne plasseres tilfeldig på et bord, og skal kunne peke på kubene i rekkefølge.
 
 Dere vil bli målt på:
+
 **ROS2: 6 poeng**
 - Hvor godt er nodene strukturert i forhold til hverandre
 - Hvor godt er nodene implementert (riktig bruk av launch, config, osv.)
