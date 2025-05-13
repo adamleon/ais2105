@@ -59,7 +59,7 @@ Start opp nettbrettet. Det er mulig det først starter i Windows.
 Bruker du en e-serie-robot kan du kjøre "headless mode", altså at ROS2 laster over et script som roboten kjører uten å gjøre konfigurasjoner. Sett roboten i "remote mode" (øverst i høyre hjørne ved siden av menyen). Deretter kjører du kommandoen
 ```
 ros2 launch ros2 launch ur_robot_driver ur_control.launch.py ur_type:=urX ​robot_ip:=yyy.yyy.yyy.yyy use_mock_hardware:=false
-initial_joint_controller:=joint_trajectory_controller headless_mode:=true
+initial_joint_controller:=scaled_joint_trajectory_controller headless_mode:=true
 ```
 Hvor urX er typen til roboten og robot_ip er IP-adressen som nevnt tidligere over. Sjekk gjerne på kontrolleren at adressen er satt riktig. Du kan også kjøre:
 ```
@@ -67,12 +67,12 @@ ping 143.25.150.X
 ```
 for å se om du har kontakt.
 
-For en CB3-serie-robot må dere ha en URCap som heter External Control. Hvis ikke det er et program allerede som heter ROS2, så kan dere enkelt lage et nytt et og legge inn External Control som eneste funksjonsblokken. Sørg for at IP adressen er den samme som nettbrettet, og trykk Play. Da venter den på kompandoer fra brettet.
+For en CB3-serie-robot må dere ha en URCap som heter External Control. Hvis ikke det er et program allerede som heter ROS2, så kan dere enkelt lage et nytt et og legge inn External Control som eneste funksjonsblokken. Sørg for at IP adressen er den samme som nettbrettet og at porten er 50002, og trykk Play *etter at du har kjørt kommandoenundee*.
 
 På nettbrettet kjører dere så komandoen
 ```
 ros2 launch ros2 launch ur_robot_driver ur_control.launch.py ur_type:=urX robot_ip:=yyy.yyy.yyy.yyy use_mock_hardware:=false
-initial_joint_controller:=joint_trajectory_controller
+initial_joint_controller:=scaled_joint_trajectory_controller
 ```
 Hvor urX er typen til roboten og robot_ip er IP-adressen som nevnt tidligere over. Sjekk gjerne på kontrolleren at adressen er satt riktig. Du kan også kjøre:
 ```
