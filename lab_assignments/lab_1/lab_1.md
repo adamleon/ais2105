@@ -41,9 +41,11 @@ Det første du skal gjøre er å lage en ny [ROS2 pakke](https://docs.ros.org/en
 Lag så en ny fil i pakken hvor du legger koden (i `joint_simulator` hvis du velger python, eller `src` for C++). Kall den `joint_simulator_node.py` (eller `.cpp`).
 
 Lag en ny klasse som heter `jointSimulator` som har fire variabler `angle`, `angular_velocity`, `voltage` og `noise`, og en `update`-funksjon som oppdaterer `angle` basert på formelen
+
 $$
 \frac{\theta(s)}{V(s)} = \frac{K}{s(Ts+1)}
 $$
+
 Der $\theta$ er vinkel, $V$ er spenning og $K=230 \text{rad}$ og $T=0.15\frac{\text{rad}}{\text{s}}$ er konstanter. Lag også flere variabler for å løse dette. Enn så lenge kan du sette `noise=0`.
 
 Når klassen fungerer, endre koden så du inkluderer en [ROS2 node](https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html) (for eksempel ved å lage klassen `def JointSimulatorNode(Node):`) som har en instans av `jointSimulator`. Den skal også ha en *publisher* som heter `publish_angle` som publiserer en `Float64` melding med `angle`-verdien, og en *subscriber* som heter `input_voltage` og en callback-funksjon kalt `voltage_listener` som mottar en `Float64`-melding, som oppdaterer `voltage`. Noden skal også ha en `wall_timer` (slik som i tutorialen) som kaller `update` til simulatoren og regner den nye vinklen og kaller på `publish_angle` for å publisere det oppdaterte vinkelen.
