@@ -207,3 +207,65 @@ Du må selv bruke OpenCV til å detektere kantene.
 Sammen skal dere oppdatere launch-filen fra forrige oppgave. Person A flytter sin `gausian_blur`-node til samme pakke som person B, og person B oppdaterer launch-filen slik at både `gaussian_blur`- og `canny_edge`-noden starter opp. Dere skal også bruke remapping (siden nå abonnerer begge på `image_raw` og publiserer på `image_output`). Dere skal skifte via remappe `image_raw` til `image_rect` for gaussian_blur, så den lytter til det kalibrerte bildet. `image_output` skiftes til `image_blurred`. For canny_edge skifter dere `image_raw` til `image_blurred`.
 
 Kjører dere nå launch-filen og kameranoden vil dere få mange topics. Ser dere da på `image_output` på `rqt`, vil dere se et ferdig prosessert bilde. Ser dere på `rqt_graph`, finner dere også hele pipeline-en fra kamera til det prosesserte bildet.
+
+
+
+-------
+
+## Vedlegg
+
+Alternativ til `image_publisher` som er kompatibel med Windows
+
+```python
+import cv2
+import rclpy
+
+from rclpy.node import Node
+from sensor_msgs.msg import Image
+
+from pathlib import Path
+from cv_bridge import CvBridge
+
+from . import camera_qos_live
+
+class WebcamPublisherNode(Node):
+    def __init__(self):
+        super().__init__('webcam_publisher')
+
+        self.publisher_ = self.create_publisher(Image, 'camera/image_raw', qos_profile=10)
+
+        self.bridge = CvBridge()
+
+        self.cap = cv2.VideoCapture(0)
+
+        self.timer = self.create_timer(1.0 / 16.0, self.timer_callback)
+
+    def timer_callback(self):
+        ret, frame = self.cap.read()
+        if not ret:
+            self.get_logger().warning('Failed to capture frame')
+            return
+
+        msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
+        self.publisher_.publish(msg)
+
+    def destroy_node(self):
+        self.cap.release()
+        super().destroy_node()
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = WebcamPublisherNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+
+```
