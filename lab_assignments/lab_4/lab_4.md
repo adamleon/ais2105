@@ -214,7 +214,7 @@ Kjører dere nå launch-filen og kameranoden vil dere få mange topics. Ser dere
 
 ## Vedlegg
 
-Alternativ til `image_publisher` som er kompatibel med Windows
+Alternativ til `image_publisher` som er kompatibel med Windows:
 
 ```python
 import cv2
@@ -223,10 +223,8 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 
-from pathlib import Path
 from cv_bridge import CvBridge
 
-from . import camera_qos_live
 
 class WebcamPublisherNode(Node):
     def __init__(self):
