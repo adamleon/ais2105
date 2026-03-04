@@ -284,7 +284,6 @@ import cv2
 import threading
 from typing import Optional
 
-from . import camera_qos_live
 
 class ImageViewerNode(Node):
     def __init__(self):
