@@ -23,16 +23,20 @@ ros2 run usb_cam usb_cam_node_exe --ros-args -p video_device:=/dev/videoX
 ```
 Hvor du bytter ut videoX med det tallet du fant tidligere.
 
-Kjør så `rqt` og bruk Image Plot til å se at kameraet funker.
+Alternativt, benytt `WebcamPublisherNode` fra vedlegg (Windows kompatibel).
+
+Kjør så `rqt` og bruk Image Plot til å se at kameraet funker. Alternativt bruk `ImageViewerNode` fra vedlegg.
 ## Del B 
 Du kan finne et bilde og plassere det en plass på datamaskinen. Du skal deretter starte noden `image_publisher` i pakken `image_publisher`. 
 ```
 ros2 run image_publisher image_publisher /sti/til/bildefil.png
 ```
-Hvis du nå kjører `rqt` og åpne Image Plot for å finne bildet. 
+Hvis du nå kjører `rqt` og åpne Image Plot for å finne bildet. Alternativt bruk `ImageViewerNode` fra vedlegg.
+
 # Oppgave 2
 ## Del A
 Det neste du skal gjøre er å kalibrere kameraet ditt. Følg denne tutorialen [her](https://docs.ros.org/en/ros2_packages/rolling/api/camera_calibration/doc/tutorial_mono.html) for å kalibrere kameraet. Når du er ferdig skal du ha en kalibreringsfil med YAML filtype.
+> Om man får problemer her, kan man se på hvordan man kan kalibrere kamera uten ROS ved bruk av OpenCV: https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html
 ## Del B
 Du skal nå lage en ny pakke. Du bestemmer selv om den skal være C++ eller Python. Kall den `camera_pipeline`
 
@@ -214,7 +218,7 @@ Kjører dere nå launch-filen og kameranoden vil dere få mange topics. Ser dere
 
 ## Vedlegg
 
-Alternativ til `image_publisher` som er kompatibel med Windows:
+#### Alternativ til `image_publisher` som er kompatibel med Windows:
 
 ```python
 import cv2
@@ -266,4 +270,108 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 
+```
+
+#### Alternativ til rqt Image Plot som er kompatibel med Windows:
+
+```python
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
+
+import cv2
+import threading
+from typing import Optional
+
+from . import camera_qos_live
+
+class ImageViewerNode(Node):
+    def __init__(self):
+        super().__init__('image_viewer')
+
+        self.declare_parameter('image_topic', 'camera/image_raw')
+        topic = self.get_parameter('image_topic').get_parameter_value().string_value
+
+        self.bridge = CvBridge()
+
+        # latest_frame is set by the subscription callback; rendered by main loop
+        self._frame_lock = threading.Lock()
+        self.latest_frame: Optional[object] = None
+
+        self.subscription = self.create_subscription(
+            Image,
+            topic,
+            self.image_callback,
+            10
+        )
+
+    def image_callback(self, msg: Image):
+        try:
+            frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        except CvBridgeError as e:
+            self.get_logger().warning(f'CvBridge error: {e}')
+            return
+
+        # store the latest frame (don't call OpenCV GUI functions here)
+        with self._frame_lock:
+            # copy to avoid issues if msg buffer is reused
+            try:
+                self.latest_frame = frame.copy()
+            except Exception:
+                self.latest_frame = frame
+
+    def pop_frame(self):
+        """Return the latest frame and clear it (thread-safe)."""
+        with self._frame_lock:
+            f = self.latest_frame
+            self.latest_frame = None
+            return f
+
+    def destroy_node(self):
+        try:
+            cv2.destroyAllWindows()
+        except Exception:
+            pass
+        super().destroy_node()
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ImageViewerNode()
+
+    window_name = 'Image Viewer'
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+
+    try:
+        while rclpy.ok():
+            rclpy.spin_once(node)
+
+            try:
+                frame = node.pop_frame()
+            except Exception:
+                frame = None
+
+            if frame is not None:
+                try:
+                    cv2.imshow(window_name, frame)
+                except Exception:
+                    # ignore display errors and continue
+                    pass
+
+            # Press 'q' to quit
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                node.get_logger().info('Quit signal received, shutting down node.')
+                break
+
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
 ```
