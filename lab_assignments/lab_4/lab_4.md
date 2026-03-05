@@ -148,7 +148,7 @@ class CannyEdgeNode(Node):
         """
         Constructs all the necessary attributes for the node.
         """
-        super().__init__('gaussian_blur')
+        super().__init__('canny_edge')
 
         # Subscribe to a image topic
         self.subscription = self.create_subscription(
@@ -182,6 +182,8 @@ class CannyEdgeNode(Node):
         # Legg koden din her
         # cv_image er bildet du skal bruke som input
         # cv_edge (en variabel du lager selv) skal være sluttresultatet etter å bruke Canny Edge.
+        # merk at bilderesultatet av å kjøre Canny er et svart-hvitt bilde som ikke er kompatabel med "bgr8" nedenfor.
+        # resultatet må konverteres. 
         
         # Convert back to ROS Image message
         try:
@@ -198,7 +200,7 @@ def main(args=None):
     rclpy.init(args=args)
     canny_edge_node = CannyEdgeNode()
     rclpy.spin(canny_edge_node)
-    cannt_edge_node.destroy_node()
+    canny_edge_node.destroy_node()
     rclpy.shutdown()
 
 if __name__ == '__main__':
