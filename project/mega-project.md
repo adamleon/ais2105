@@ -1,27 +1,28 @@
 På overordnet nivå skal dere programmere en UR-robot til å ta bilde av noen fargede kuber som skal kunne plasseres tilfeldig på et bord, og skal kunne peke på kubene i rekkefølge.
 
 Dere vil bli målt på:
-**ROS2: 10 poeng**
+## **ROS2: 10 poeng**
 - Hvor godt er nodene strukturert i forhold til hverandre?
 - Hvor godt er nodene implementert (riktig bruk av launch, config, osv.)?
 - Hvor konfigurerbart er det (bruk av parameter, argumenter i launch, o.l.)?
 - Hvordan beveger roboten seg (hvor presist, hvordan peker den, korrigerer den underveis, o.l.)?
 - Brukes ROS2 components og composistion?
-**Maskinsyn: 5 poeng**
+## **Maskinsyn: 5 poeng**
 - Hvordan er kamera-pipeline satt sammen? Hvilke metoder brukes?
 - Hvor robust er kamera til å detektere kubene (forskjellige posisjoner, høyder, lysforhold, osv.)?
-**Systemtenkning: 10 poeng**
+## **Systemtenkning: 10 poeng**
 - Hvor godt vurderes metoder, implementering o.l. opp mot hverandre?
 - Hvor godt er teoriforståelse i faget?
 - Er det implementert noen tilleggsfunksjoner?
 - Er løsningen formet rundt en industriell problemstilling (del av en produksjonsprosess, løse et problem for en bedrift, e.l.)?
-**Prosjekt: 15 poeng**
+## **Prosjekt: 15 poeng**
 - Hvor godt samarbeider gruppen, og hvordan var arbeidsfordelingen?
 - Hvilke verktøy er brukt innad i gruppen (git, overleaf, discord, osv.)?
 - Hvor godt skrevet/strukturert er rapporten?
 - Hvor robust er løsningen? F.eks. bruk av sikkerhetssoner, deteksjon av feil tilstand (f.eks. manglende farge)?
 - Hvor godt testet er løsningen? Forskjellige lysforhold, posisjoner, osv.
 - Er det bygget noe ekstra rundt? Bruk av griper, kraftsensor, andre sensorer/motorer, osv.)?
+
 Poengene blir likt på alle med mindre det kommer frem en skjeivfordeling i arbeid.
 
 Hver UR-robot er utstyrt med et Surface-brett som er ferdig installert med Linux og ROS2, samt pakker for å koble seg til roboten. Kjører dere et par launch-filer skal dere kunne kommunisere med nettbrettet. Dere kan da lage og kjøre noder på egne PCer for å styre roboten.
