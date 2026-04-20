@@ -99,4 +99,5 @@ Rapporten til slutt skal ha følgende oppbygning:
 - Diskusjon: Hvor godt gjorde roboten det i forhold til målene dere satt i introduksjonen? Hvorfor funket det/funket det ikke.
 - Gruppedynamikk: Her skriver dere hvem som gjorde hva, hvordan dere arbeidet, om dere brukte noen spesifikke verktøy som git, Teams e.l. Til slutt skriver dere individuelt en refleksjon om gruppedynamikken. Den individuelle delen skal være helt individuell og ingen andre på gruppen skal se den. Dette skal leveres som et separat dokument sammen med rapporten.
 - Konklusjon: Summer resultatene og introduksjonen.
+
 Tenk over poengfordelingen presentert i starten av oppgaven. Vær sikker på at dere svarer godt på de kriteriene i rapporten for å sikre at dere får uttelling. Til mappen skal dere levere rapporten, det individuelle dokumentet og kode (evt. andre vedlegg) i en zip-fil.
